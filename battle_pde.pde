@@ -7,6 +7,7 @@ PFont pixel;
 int health,enemyhealth;
 int attack,enemyattack;
 boolean stop = false; // Pause state
+int enemyHp,enemyATK;
 
 void setup() {
   size(1024, 768);
