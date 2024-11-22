@@ -4,8 +4,8 @@ PImage grid;
 PImage mons1;
 PImage pause1;
 PFont pixel;
-int health;
-int attack;
+int health,enemyhealth;
+int attack,enemyattack;
 boolean stop = false; // Pause state
 
 void setup() {
