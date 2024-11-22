@@ -16,7 +16,7 @@ void setup() {
   mons1 = loadImage("mons1.jpg");
   pause1 = loadImage("Pause.png");
   imageMode(CORNER);
-  pixel = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 12);
+  pixel = createFont("pixel.ttf", 12);
   textFont(pixel);
 }
 
@@ -24,28 +24,33 @@ void draw() {
   if (!stop) {
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
-    image(mons1, 800, 400, 200, 200);
+    image(mons1, 800, 150, 200, 200);
     fill(#979AF5);
     stroke(#1119EA);
-    rect(50, 600, 400, 100);
-    rect(600, 600, 400, 100);
+    rect(50, 350, 400, 100);
+    rect(600, 350, 400, 100);
     rect(0, 0, 100, 70);
     textSize(30);
     fill(0, 408, 612);
-    text("生命值:", 70, 650);
-    text("攻擊力:", 250, 650);
-    text("生命值:", 620, 650);
-    text("攻擊力:", 800, 650);
+    text("生命值:", 70, 390);
+    text("攻擊力:", 70, 430);
+    text("生命值:", 620, 390);
+    text("攻擊力:", 620, 430);
     textSize(50);
     fill(245, 27, 93);
     text("ESC", 10, 50);
+    fill(155,125,135);
+    noStroke();
+    rect(0,480,1200,400);
+    fill(255,255,255);
+    rect(50,150,200,200);
   } else {
     image(pause1, 0, 0);
     textSize(100);
     fill(255, 255, 255);
-    text("暫停", 300, 300);
+    text("暫停", 420, 300);
     textSize(80);
-    text("Pause", 300, 400);
+    text("Pause", 420, 400);
     fill(#979AF5);
     rect(0, 0, 100, 70);
     fill(245, 27, 93);
@@ -58,4 +63,5 @@ void mousePressed() {
   if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
     stop = !stop; 
   }
+  
 }
