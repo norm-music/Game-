@@ -1,11 +1,5 @@
-PImage box;
-PImage bg;
-PImage grid;
-PImage mons1;
-PImage pause1;
-PFont pixel;
 int health,enemyhealth=1;
-int attack,enemyattack,deathtint=255;
+int attack,enemyattack;
 boolean stop = false; // Pause state
 
 void setup() {
@@ -15,7 +9,7 @@ void setup() {
   mons1 = loadImage("mons1.jpg");
   pause1 = loadImage("Pause.png");
   imageMode(CORNER);
-  pixel = createFont("FUSION-PIXEL-PROPORTIONAL .TTF", 12);
+  pixel = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 12);
   textFont(pixel);
 }
 
@@ -31,6 +25,7 @@ void draw() {
     //image(mons1, 800, 150, 200, 200);
     textSize(30);
     fill(0, 408, 612);
+    
     text("生命值:", 70, 390);
     text("攻擊力:", 70, 430);
     text("生命值:", 620, 390);
@@ -43,6 +38,13 @@ void draw() {
     rect(0,480,1200,400);
     fill(255,255,255);
     rect(50,150,200,200);
+    fill(80,90,100);
+    rect(75,550,400,150);
+    rect(525,550,400,150);
+    fill(99,50,99);
+    textSize(100);
+    text("攻擊",175,650);
+    text("技能",625,650);
   }
   else
   {
@@ -58,9 +60,9 @@ void draw() {
     textSize(40);
     text("繼續", 10, 50);
   }
-  if(enemyhealth<=0) 
+  if(enemyhealth>0&&!stop) 
   {
-  
+  image(mons1, 800, 150, 200, 200);
   }
   else
   {
@@ -69,22 +71,9 @@ void draw() {
   if(stop)
   {
       
-   if(deathtint>=10)
-   {
-     deathtint-=3;
-     tint(255, 255, 255, deathtint);
-      image(mons1, 800, 150, 200, 200);
-     
-   }
+ 
    
-   
-   else
-   {
-     tint(255,255,255,0);
-     image(mons1, 800, 150, 200, 200);
-     println(deathtint);
-     deathtint =0;
-  }
+ 
 }}
 
 void mousePressed() {
