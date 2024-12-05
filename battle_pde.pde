@@ -22,7 +22,7 @@ int skillxtap=215;
 int skillytap=65;
 int skillrow =0;
 int awardtemp=0;
-boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true; // Pause state
+boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true,choose=false; // Pause state
 
 
 void setup() {
@@ -214,10 +214,9 @@ void mousePressed() {
    if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset){
      battleset=!battleset;
    }
-    if(mouseX > 350 && mouseX < 680 && mouseY > 330 && mouseY < 450 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
-  { rect(350,250,330,120);
-      rect(350,400,330,120);
-      rect(350,550,330,120);
+    if(mouseX > 350 && mouseX < 680 && mouseY > 330 && mouseY < 450 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle&&choose)
+  {
+    
   }
    if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
  {
