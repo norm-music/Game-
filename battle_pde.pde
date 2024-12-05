@@ -4,14 +4,16 @@ PImage grid;
 PImage mons1;
 PImage pause1;
 PFont pixel;
-int enemyHp=10,enemyATK=1;
+int enemyHp=0,enemyATK=1;
 int HP=10,enemyhealth=1;
-int ATK=1,enemyattack;
+int ATK=5,enemyattack;
 int[] skill={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-int[] skill1;
-int[] skill2;
-int[] skill22;
-int[] skill3;
+int skill1;
+int skill2;
+int skill22;
+int skill3;
+int skill2type;
+int levelfix;
 int atkdelay;
 int atkdelay2;
 int atking;
@@ -19,7 +21,8 @@ int skillline;
 int skillxtap=215;
 int skillytap=65;
 int skillrow =0;
-boolean stop = false,battleset=true,Turn=true; // Pause state
+int awardtemp=0;
+boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true; // Pause state
 
 
 void setup() {
@@ -34,7 +37,8 @@ void setup() {
 }
 
 void draw() {
-  if (!stop) {
+  if(battle){
+  if (!stop&&Alive) {
     
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
@@ -62,6 +66,9 @@ void draw() {
     rect(0,480,1200,400);//atk skill bg
     fill(255,255,0);//main
     rect(50,150,200,200);
+    if(enemyHp<=0){
+    Alive = false;
+    }
     if(!Turn&&millis()-atkdelay>1800)
      {
               
@@ -96,7 +103,15 @@ void draw() {
     else
     {
       rect(15,510,75,60);
+      fill(255,0,0);
+      textSize(30);
+      text("返回",25,550);
+      fill(80,90,100);
       rect(15,680,75,60);
+      fill(0,255,0);
+      textSize(30);
+      text("確定",25,720);
+      fill(80,90,100);
       for(int i=1; i< skillrow;i++)
       {
         for(int j = 0; j< 4 ;j++)
@@ -104,7 +119,7 @@ void draw() {
       }
     }
   }
-  else
+  if(stop&&enemyHp>0) 
   {
     image(pause1, 0, 0);
     textSize(100);
@@ -126,14 +141,52 @@ void draw() {
   {
     
   }  
-  if(stop)
+  if(battle&&!Alive)
   {
-      
- 
-   
- 
-}}
-
+      if(enemyHp<=0)
+      {
+        
+        background(100,149,237);
+        image(grid,0,0);
+        text("勝利",512,150);
+        if(awardtemp==0)
+        {
+          award();
+          awardtemp=1;
+      }
+      fill(0,0,0);
+      rect(350,250,330,120);
+      rect(350,400,330,120);
+      rect(350,550,330,120);
+      textAlign(CENTER, CENTER);
+      println(skill1);
+      fill(255,255,255);
+      if(skill1>=0)
+      text("+"+skill1,515,310);
+      if(skill1<0)
+      text(skill1,515,310);
+      if(skill2type==1){
+        text("x"+skill2,350+70,460);
+        if(skill22>=0)
+        text("+"+skill22,550,460);
+        else
+        text(skill22,550,460);
+      }
+       if(skill2type==0){
+        text("x"+skill2,550,460);
+        if(skill22>=0)
+        text("+"+skill22,420,460);
+        else
+        text(skill22,420,460);
+      }
+      if(skill3>=0)
+        text("+"+skill3,515,610);
+        else
+        text(skill3,510,610);
+    }
+  }
+}
+}
 void mousePressed() {
   if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
     stop = !stop; 
@@ -161,4 +214,42 @@ void mousePressed() {
    if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset){
      battleset=!battleset;
    }
+    if(mouseX > 350 && mouseX < 680 && mouseY > 330 && mouseY < 450 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
+  { rect(350,250,330,120);
+      rect(350,400,330,120);
+      rect(350,550,330,120);
+  }
+   if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
+ {
+   
+ }
+    if(mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
+  {
+    
+  }
+  }
+  void award(){
+    while(skill1==0) 
+    {
+    if((int)random(10)%3==0)
+  skill1 = (int)random(-levelfix-20,-levelfix);
+  else
+  skill1 = (int)random(levelfix,levelfix+10);
+    }
+    while(skill2==0)
+    {
+  if(random(10)%2==0)
+  skill2 = (int)random(-levelfix/3-3,-levelfix/4-1);
+  else
+  skill2 = (int)random(levelfix/5+1,levelfix/4+3);
+    }
+  if((int)random(10)%2==0)
+  skill22 = (int)random(-levelfix-10,-levelfix);
+  else
+  skill22 = (int)random(levelfix,levelfix+7);
+  if(random(10)%2==0)
+  skill3 = (int)random(-levelfix*levelfix+20,-levelfix);
+  else
+  skill3 = (int)random(levelfix,levelfix*(levelfix-1)+10);
+  skill2type = (int)random(10)%2;
   }
