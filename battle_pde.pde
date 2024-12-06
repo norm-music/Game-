@@ -40,6 +40,7 @@ void setup() {
   imageMode(CORNER);
   pixel = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 12);
   textFont(pixel);
+  play();
 }
 
 void draw() {
@@ -246,6 +247,10 @@ void draw() {
 void mousePressed() {
   if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
     stop = !stop; 
+        if (at.isPlaying())
+          at.pause();
+        else
+          at.loop();
   }
   if(mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
   {
