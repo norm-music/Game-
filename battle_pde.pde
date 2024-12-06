@@ -40,6 +40,7 @@ void setup() {
   imageMode(CORNER);
   pixel = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 12);
   textFont(pixel);
+  play();
 }
 
 void draw() {
@@ -141,6 +142,10 @@ void draw() {
   }
   if(stop&&enemyHp>0) 
   {
+    if (at.isPlaying())
+          at.pause();
+        else
+          at.loop();
     image(pause1, 0, 0);
     textSize(100);
     fill(255, 255, 255);
