@@ -28,7 +28,7 @@ int awardtemp=0;
 int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
-boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true,skillchoosetemp=false; // Pause state
+boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true,skillchoosetemp=false,restart=false,back=false; // Pause state
 
 
 void setup() {
@@ -46,7 +46,6 @@ void setup() {
 void draw() {
   if(battle){
   if (!stop&&Alive) {
-    
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
     fill(#979AF5);
@@ -99,10 +98,10 @@ void draw() {
   }
     if(battleset)
     {
-    fill(80,90,100);
+    fill(#161FF2);//攻擊跟技能的方塊顏色
     rect(75,550,400,150);//atk
     rect(525,550,400,150);//skill
-    fill(99,50,99);
+    fill(#B8BBFA);
     textSize(100);
     text("攻擊",175,650);
     text("技能",625,650);
@@ -154,9 +153,14 @@ void draw() {
     text("Pause", 420, 400);
     fill(#979AF5);
     rect(0, 0, 100, 70);
+    rect(400, 0, 200, 70);
+    rect(810, 0, 100, 70);
     fill(245, 27, 93);
     textSize(40);
     text("繼續", 10, 50);
+    text("重新開始", 420, 50);
+    text("放棄", 820, 50);
+    
   }
   if(enemyHp>0&&!stop) 
   {
@@ -218,9 +222,7 @@ void draw() {
       fill(255,0,0);
       textSize(30);
       text("返回",50,540);
-      
-      
-      fill(80,90,100);
+      fill(#161FF2);
       rect(1-115+(1*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(1*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
@@ -257,6 +259,16 @@ void draw() {
 void mousePressed() {
   if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
     stop = !stop; 
+  }
+  if (stop==true){
+     if (mouseX > 420 && mouseX < 520 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT){
+       stop = !stop;
+       enemyHp=10;
+       enemyATK=3;
+       HP=10;
+       ATK=0;
+       replay();
+     }
   }
   if(mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
   {
