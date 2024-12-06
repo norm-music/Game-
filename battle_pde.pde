@@ -5,7 +5,7 @@ PImage mons1;
 PImage pause1;
 PFont pixel;
 int enemyHp=10,enemyATK=1;
-int HP=10,enemyhealth=1;
+int HP=0,enemyhealth=1;
 int ATK=5,enemyattack;
 int[] skillarray={0,-1,-1,-1};
 int[] skillplus={5,0,0,0};
@@ -40,7 +40,6 @@ void setup() {
   imageMode(CORNER);
   pixel = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 12);
   textFont(pixel);
-  play();
 }
 
 void draw() {
@@ -73,7 +72,7 @@ void draw() {
     rect(0,480,1200,400);//atk skill bg
     fill(255,255,0);//main
     rect(50,150,200,200);
-    if(enemyHp<=0){
+    if(enemyHp<=0||HP<=0){
     Alive = false;
     }
     if(!Turn&&millis()-atkdelay>1800)
@@ -237,6 +236,12 @@ void draw() {
       }
     }
       }
+      if(HP<=0)
+      {
+         background(0,0,0);
+         fill(255,0,0);
+         text("GAME OVER",250,150);
+      }
       if(skillchoosetemp)
       {
       battle = !battle;
@@ -247,10 +252,6 @@ void draw() {
 void mousePressed() {
   if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
     stop = !stop; 
-        if (at.isPlaying())
-          at.pause();
-        else
-          at.loop();
   }
   if(mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
   {
