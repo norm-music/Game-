@@ -24,7 +24,7 @@ void setup() {
   creditbotm = loadImage("creditbotm.png");
   controlbotm = loadImage("controlbotm.png");
   wall = loadImage("wall.PNG");
-  background = loadImage("background.png");
+  mazebg = loadImage("background.png");
   TCfont = createFont("NotoSansTC-Black.otf", 28);
   textFont(TCfont);
   cols = width / cellSize;
