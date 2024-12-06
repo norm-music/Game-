@@ -140,6 +140,43 @@ void generateMaze() {
   mazecheck[0][0] = 0;
   maze[rows - 1][cols - 1] = 0;
   mazecheck[rows - 1][cols - 1] = 0;
+  // 檢查並修復終點是否被牆包圍
+  ensureExitConnectivity();
+}
+
+// 檢查並修復終點是否可達
+void ensureExitConnectivity() {
+  int exitX = cols - 1;
+  int exitY = rows - 1;
+
+  // 終點周圍四個方向
+  int[] dx = {-1, 1, 0, 0};
+  int[] dy = {0, 0, -1, 1};
+
+  boolean hasPath = false;
+
+  // 檢查終點四周是否有通路
+  for (int i = 0; i < 4; i++) {
+    int nx = exitX + dx[i];
+    int ny = exitY + dy[i];
+    if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && maze[ny][nx] == 0) {
+      hasPath = true;
+      break;
+    }
+  }
+
+  // 如果沒有通路，挖通一條路
+  if (!hasPath) {
+    // 隨機選擇一個方向挖通
+    for (int i = 0; i < 4; i++) {
+      int nx = exitX + dx[i];
+      int ny = exitY + dy[i];
+      if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+        maze[ny][nx] = 0; // 挖通路徑
+        break;
+      }
+    }
+  }
 }
 
 // 使用深度優先搜尋(DFS)來開闢迷宮
