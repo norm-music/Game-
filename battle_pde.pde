@@ -28,7 +28,7 @@ int awardtemp=0;
 int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
-boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true; // Pause state
+boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true,skillchoosetemp=false; // Pause state
 
 
 void setup() {
@@ -213,18 +213,15 @@ void draw() {
       fill(255,0,0);
       textSize(30);
       text("返回",50,540);
-      fill(80,90,100);
-      rect(15,680,75,60);
-      fill(0,255,0);
-      textSize(30);
-      text("確定",50,710);
+      
+      
       fill(80,90,100);
       rect(1-115+(1*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(1*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
       fill(255,255,255);
-      for(int i=0;i<2;i+=2){
+      for(int i=0;i<3;i+=2){
       for(int j=0;j<2;j++){
       if(skillarray[i+j]==1)
     {
@@ -239,6 +236,10 @@ void draw() {
       }
     }
       }
+      if(skillchoosetemp)
+      {
+      battle = !battle;
+    }
   }
 }
 }
@@ -274,19 +275,7 @@ void mousePressed() {
      battleset=!battleset;
    }//確定
    
-    if(mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
-  {
-    skillchoose=1;
-  }
-   if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&skillchoose==0)
- {
-   skillchoose=2;
- }
-    if(mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
-  {
-   skillchoose=3;
-  }
-  
+ 
   if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
   {
    skillchoose=0;
@@ -312,8 +301,9 @@ void mousePressed() {
       skillplus[0]=skill3;
       skillmult[0]=1;
    }
+   skillchoosetemp = true;
    }
-     if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+    if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
      if(skillchoose==1)
    {
@@ -333,8 +323,8 @@ void mousePressed() {
       skillplus[1]=skill3;
       skillmult[1]=1;
    }
+   skillchoosetemp = true;
    }
-   
      if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
      if(skillchoose==1)
@@ -355,8 +345,8 @@ void mousePressed() {
       skillplus[2]=skill3;
       skillmult[2]=1;
    }
+   skillchoosetemp = true;
    }
-   
      if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
      if(skillchoose==1)
@@ -377,7 +367,21 @@ void mousePressed() {
       skillplus[3]=skill3;
       skillmult[3]=1;
    }
+   skillchoosetemp = true;
    }
+      if(mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
+  {
+    skillchoose=1;
+  }
+   if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&skillchoose==0)
+ {
+   skillchoose=2;
+ }
+    if(mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
+  {
+   skillchoose=3;
+  }
+  
    if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
  {
    skillready[0]=0;
