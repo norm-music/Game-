@@ -4,9 +4,9 @@ PImage grid;
 PImage mons1;
 PImage pause1;
 PFont pixel;
-int enemyHp=10,enemyATK=1;
-int HP=0,enemyhealth=1;
-int ATK=5,enemyattack;
+int enemyHp=10,enemyATK=3;
+int HP=10;
+int ATK=0;
 int[] skillarray={0,-1,-1,-1};
 int[] skillplus={5,0,0,0};
 int[] skillmult={3,1,1,1};
@@ -78,11 +78,11 @@ void draw() {
     if(!Turn&&millis()-atkdelay>1800)
      {
               
-       if((millis()-atkdelay)<4000){
+       if((millis()-atkdelay)<2700){
       text("-",300,300);
       text(enemyATK,340,300);
     }
-    if((millis()-atkdelay)>4000){
+    if((millis()-atkdelay)>2700){
     Turn = !Turn;
     HP = HP - enemyATK;
     }
