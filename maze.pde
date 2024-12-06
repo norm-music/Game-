@@ -23,8 +23,8 @@ void setup() {
   backbotm = loadImage("backbotm.png");
   creditbotm = loadImage("creditbotm.png");
   controlbotm = loadImage("controlbotm.png");
-  mazebg = loadImage("wall.PNG");
-  wall = loadImage("background.png");
+  wall = loadImage("wall.PNG");
+  background = loadImage("background.png");
   TCfont = createFont("NotoSansTC-Black.otf", 28);
   textFont(TCfont);
   cols = width / cellSize;
@@ -194,9 +194,9 @@ void drawMaze() {
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       if (maze[i][j] == 1) {
-       image(wall, j * cellSize, i * cellSize, cellSize, cellSize); // 牆壁
+       image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize); // 路徑
       } else {
-        image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize); // 路徑
+        image(wall, j * cellSize, i * cellSize, cellSize, cellSize); // 牆壁
       }
     }
   }
