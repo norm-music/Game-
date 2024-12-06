@@ -4,10 +4,13 @@ PImage grid;
 PImage mons1;
 PImage pause1;
 PFont pixel;
-int enemyHp=0,enemyATK=1;
+int enemyHp=10,enemyATK=1;
 int HP=10,enemyhealth=1;
 int ATK=5,enemyattack;
-int[] skill={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
+int[] skillarray={0,-1,-1,-1};
+int[] skillplus={5,0,0,0};
+int[] skillmult={3,1,1,1};
+int[] skillready={1,1,1,1};
 int skill1;
 int skill2;
 int skill22;
@@ -22,7 +25,10 @@ int skillxtap=215;
 int skillytap=65;
 int skillrow =0;
 int awardtemp=0;
-boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true,choose=false; // Pause state
+int skillchoose =0;
+int finalatk = ATK;
+int skillnum;
+boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true; // Pause state
 
 
 void setup() {
@@ -53,7 +59,7 @@ void draw() {
     text(enemyHp,720,390);//enemy show
     text(enemyATK,720,430);
     text(HP,170,390);//main show
-    text(ATK,170,430);
+    text(finalatk,170,430);
     text("生命值:", 70, 390);
     text("攻擊力:", 70, 430);
     text("生命值:", 620, 390);
@@ -83,7 +89,7 @@ void draw() {
      }
     if((millis()-atkdelay)<1500&&atking==1){
       text("-",600,300);
-      text(ATK,640,300);
+      text(finalatk,640,300);
       
     }
     else
@@ -112,11 +118,25 @@ void draw() {
       textSize(30);
       text("確定",25,720);
       fill(80,90,100);
-      for(int i=1; i< skillrow;i++)
-      {
-        for(int j = 0; j< 4 ;j++)
-        rect(1-115+(i*skillxtap),500+(j*skillytap),200,50);
+      rect(1-115+(1*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
+      rect(1-115+(1*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
+      rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
+      rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
+      fill(255,255,255);
+      for(int i=0;i<2;i+=2){
+      for(int j=0;j<2;j++){
+      if(skillarray[i+j]==1)
+    {
+      text("x"+skillmult[i+j]+"+"+skillplus[i+j],1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
+  
+    }
+    if(skillarray[i+j]==0)
+    {
+      text("+"+skillplus[i+j]+"x"+skillmult[i+j],1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
+    }
       }
+      }
+      fill(80,90,100);
     }
   }
   if(stop&&enemyHp>0) 
@@ -154,12 +174,13 @@ void draw() {
           award();
           awardtemp=1;
       }
+      if(skillchoose==0){
       fill(0,0,0);
       rect(350,250,330,120);
       rect(350,400,330,120);
       rect(350,550,330,120);
       textAlign(CENTER, CENTER);
-      println(skill1);
+      textSize(80);
       fill(255,255,255);
       if(skill1>=0)
       text("+"+skill1,515,310);
@@ -180,10 +201,44 @@ void draw() {
         text(skill22,420,460);
       }
       if(skill3>=0)
-        text("+"+skill3,515,610);
+        text("+"+skill3+"",515,610);
         else
         text(skill3,510,610);
     }
+    if(skillchoose>0)
+    {
+    background(100,149,237);
+        image(grid,0,0);
+      rect(15,510,75,60);
+      fill(255,0,0);
+      textSize(30);
+      text("返回",50,540);
+      fill(80,90,100);
+      rect(15,680,75,60);
+      fill(0,255,0);
+      textSize(30);
+      text("確定",50,710);
+      fill(80,90,100);
+      rect(1-115+(1*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
+      rect(1-115+(1*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
+      rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
+      rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
+      fill(255,255,255);
+      for(int i=0;i<2;i+=2){
+      for(int j=0;j<2;j++){
+      if(skillarray[i+j]==1)
+    {
+      text("x("+skillmult[i+j]+")+("+skillplus[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
+  
+    }
+    if(skillarray[i+j]==0)
+    {
+      text("+("+skillplus[i+j]+")x("+skillmult[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
+    }
+      }
+      }
+    }
+      }
   }
 }
 }
@@ -196,38 +251,163 @@ void mousePressed() {
     atking=1;
     atkdelay = millis();
     println(atkdelay);
-    enemyHp = enemyHp - ATK;
+    enemyHp = enemyHp - finalatk;
     Turn = !Turn;
   }
   if(mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset)
   {
     battleset = !battleset;
-    skillline = skill.length;
-    skillrow =0;
-    while(skillline >= 0)
-    {
-      skillline -=4;
-      skillrow++;
-    }
-    skillline +=4;
+    
   }
-   if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset){
+   if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset)
+   {
      battleset=!battleset;
-   }
-    if(mouseX > 350 && mouseX < 680 && mouseY > 330 && mouseY < 450 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle&&choose)
-  {
-    
-  }
-   if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
- {
+     finalatk = ATK;
+     skillready[0]=1;
+     skillready[1]=1;
+     skillready[2]=1;
+     skillready[3]=1;
+   }//返回
    
- }
-    if(mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp>=0&&!Alive&&battle)
+   if(mouseX > 15 && mouseX < 90 && mouseY > 680 && mouseY < 740 && mouseButton == LEFT&&!battleset)
+   {
+     battleset=!battleset;
+   }//確定
+   
+    if(mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
   {
-    
+    skillchoose=1;
   }
+   if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&skillchoose==0)
+ {
+   skillchoose=2;
+ }
+    if(mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
+  {
+   skillchoose=3;
   }
-  void award(){
+  
+  if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+  {
+   skillchoose=0;
+  }
+  
+  if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+   {
+     if(skillchoose==1)
+   {
+      skillarray[0]=0;
+      skillplus[0]=skill1;
+      skillmult[0]=1;
+   }
+   if(skillchoose==2)
+   {
+      skillarray[0]=skill2type;
+      skillplus[0]=skill22;
+      skillmult[0]=skill2;
+   }
+   if(skillchoose==3)
+   {
+      skillarray[0]=0;
+      skillplus[0]=skill3;
+      skillmult[0]=1;
+   }
+   }
+     if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+   {
+     if(skillchoose==1)
+   {
+      skillarray[1]=0;
+      skillplus[1]=skill1;
+      skillmult[1]=1;
+   }
+   if(skillchoose==2)
+   {
+      skillarray[1]=skill2type;
+      skillplus[1]=skill22;
+      skillmult[1]=skill2;
+   }
+   if(skillchoose==3)
+   {
+      skillarray[1]=0;
+      skillplus[1]=skill3;
+      skillmult[1]=1;
+   }
+   }
+   
+     if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+   {
+     if(skillchoose==1)
+   {
+      skillarray[2]=0;
+      skillplus[2]=skill1;
+      skillmult[2]=1;
+   }
+   if(skillchoose==2)
+   {
+      skillarray[2]=skill2type;
+      skillplus[2]=skill22;
+      skillmult[2]=skill2;
+   }
+   if(skillchoose==3)
+   {
+      skillarray[2]=0;
+      skillplus[2]=skill3;
+      skillmult[2]=1;
+   }
+   }
+   
+     if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+   {
+     if(skillchoose==1)
+   {
+      skillarray[3]=0;
+      skillplus[3]=skill1;
+      skillmult[3]=1;
+   }
+   if(skillchoose==2)
+   {
+      skillarray[3]=skill2type;
+      skillplus[3]=skill22;
+      skillmult[3]=skill2;
+   }
+   if(skillchoose==3)
+   {
+      skillarray[3]=0;
+      skillplus[3]=skill3;
+      skillmult[3]=1;
+   }
+   }
+   if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
+ {
+   skillready[0]=0;
+   skilluse(0);
+  println("1");
+ }
+ if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[1]==1&&Alive)
+ {
+   skillready[1]=0;
+   skilluse(1);
+  println("1");
+ }
+ if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[2]==1&&Alive)
+ {
+   skillready[2]=0;
+   skilluse(2);
+  println("1");
+ }
+ if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[3]==1&&Alive)
+ {
+   skillready[3]=0;
+   skilluse(3);
+  println("1");
+ }
+   
+   
+}
+  
+  
+    void award(){
     while(skill1==0) 
     {
     if((int)random(10)%3==0)
@@ -251,4 +431,15 @@ void mousePressed() {
   else
   skill3 = (int)random(levelfix,levelfix*(levelfix-1)+10);
   skill2type = (int)random(10)%2;
+  }
+  
+  void skilluse(int num)
+  {
+  if(skillarray[num]==0){
+  finalatk = (finalatk + skillplus[num])*skillmult[num];
+  }
+  
+  if(skillarray[num]==1){
+  finalatk = (finalatk * skillmult[num])+skillplus[num];
+  }
   }
