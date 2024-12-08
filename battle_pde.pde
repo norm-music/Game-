@@ -1,3 +1,23 @@
+PFont TCfont;
+PImage startbotm;
+PImage backbotm;
+PImage creditbotm;
+PImage controlbotm;
+PImage mazebg;
+PImage wall;
+int mode = 0;
+int[][] maze = new int[32][24]; // 迷宮陣列
+int cellSize = 48; // 單格大小
+int rows, cols;
+int[][] mazecheck;
+int playerX = 0, playerY = 0; // 角色起始位置
+int moveX = 0, moveY = 0;     // 角色移動方向
+int moveDelay = 200;          // 移動延遲（毫秒）
+int lastMoveTime = 0;         // 上次移動的時間記錄
+int nowmap = 1; // 當前地圖
+int allmap = 3;  // 總地圖數量
+boolean canMove=true;
+//battle define start
 PImage box;
 PImage bg;
 PImage grid;
@@ -28,23 +48,50 @@ int awardtemp=0;
 int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
-boolean stop = false,battleset=true,Turn=true,battle=true,Alive=true,skillchoosetemp=false,restart=false,back=false; // Pause state
-
+boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false; // Pause state
+//battle define end
 
 void setup() {
   size(1024, 768);
+  startbotm = loadImage("startbotm.png");
+  backbotm = loadImage("backbotm.png");
+  creditbotm = loadImage("creditbotm.png");
+  controlbotm = loadImage("controlbotm.png");
+  wall = loadImage("wall.PNG");
+  mazebg = loadImage("background.png");
+  TCfont = createFont("NotoSansTC-Black.otf", 28);
+  textFont(TCfont);
+  cols = width / cellSize;
+  rows = height / cellSize;
+  maze = new int[rows][cols];
+  mazecheck = new int[rows][cols];
+  generateMaze();
   bg = loadImage("bg.jpg");
   grid = loadImage("ScreenGrid.png");
   mons1 = loadImage("mons1.jpg");
   pause1 = loadImage("Pause.png");
   imageMode(CORNER);
-  pixel = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 12);
-  textFont(pixel);
-  play();
 }
-
-void draw() {
-  if(battle){
+  
+  void draw () {
+  background(#FFFFFF);
+  if (mode == 0) {
+    background(#FFFFFF);
+    fill(#0000FF);
+    imageMode(CORNER);
+    image(startbotm, 403, 330);
+    image(controlbotm, 403, 440);
+    image(creditbotm, 403, 550);
+    stroke(#0000FF);
+    strokeWeight(6);
+    textSize(28);
+  }else if (mode == 1) {
+    // 迷宮模式
+    drawMaze();
+    drawPlayer(); // 繪製角色
+    movePlayer(); // 處理角色移動
+    
+    if(battle){ //battle start
   if (!stop&&Alive) {
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
@@ -141,10 +188,10 @@ void draw() {
   }
   if(stop&&enemyHp>0) 
   {
-    if (at.isPlaying())
-          at.pause();
-        else
-          at.loop();
+   // if (at.isPlaying())
+  //        at.pause();
+ //       else
+  //        at.loop();
     image(pause1, 0, 0);
     textSize(100);
     fill(255, 255, 255);
@@ -249,15 +296,30 @@ void draw() {
          fill(255,0,0);
          text("GAME OVER",250,150);
       }
-      if(skillchoosetemp)
-      {
-      battle = !battle;
-    }
+  }
+}//battle end
+
+
+    
+  }else if (mode == 4) {
+    // 遊戲結束畫面
+    background(#000000);
+    fill(#FFFFFF);
+    textSize(50);
+    textAlign(CENTER, CENTER);
+    text("遊戲結束！恭喜通關！", width / 2, height / 2);
   }
 }
-}
-void mousePressed() {
-  if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
+    
+  void mousePressed(){
+        if (mouseX>=403 && mouseX <= 620 &&mouseY >= 330&&mouseY <= 430) 
+        mode = 1;
+        else if (mouseX>=403 && mouseX <= 620 &&mouseY >= 440&&mouseY <= 540) 
+        mode = 2;//打遊戲操作
+       else if (mouseX>=403 && mouseX <= 620 &&mouseY >= 550&&mouseY <= 650) 
+        mode = 3;//打遊戲介紹
+        if(battle){ //battle click start
+          if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
     stop = !stop; 
   }
   if (stop==true){
@@ -267,7 +329,7 @@ void mousePressed() {
        enemyATK=3;
        HP=10;
        ATK=0;
-       replay();
+       //replay();
      }
   }
   if(mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
@@ -324,7 +386,7 @@ void mousePressed() {
       skillplus[0]=skill3;
       skillmult[0]=1;
    }
-   skillchoosetemp = true;
+   battle = false;
    }
     if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
@@ -431,10 +493,195 @@ void mousePressed() {
  }
    
    
+        }//battle click end
+      }
+      
+void drawPlayer() {
+  fill(#0000FF); // 角色顏色
+  noStroke();
+  rect(playerX * cellSize, playerY * cellSize, cellSize, cellSize);
+}      
+
+void movePlayer() {
+  // 檢查是否達到移動延遲時間
+  if (millis() - lastMoveTime >= moveDelay) {
+    int newX = playerX + moveX;
+    int newY = playerY + moveY;
+    moveX=0;
+    moveY=0;
+    // 確保角色不移出迷宮邊界，並檢查是否撞牆
+    if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && maze[newY][newX] == 0) {
+      playerX = newX;
+      playerY = newY;
+    }  
+    if (playerX == cols - 1 && playerY == rows - 1) {
+        nextLevel(); // 切換到下一張地圖
+    }
+    
+    // 更新最後移動時間
+    lastMoveTime = millis();
+  }
 }
+
+void nextLevel() {
+  if (nowmap < allmap) {
+    nowmap++;  // 切換到下一張地圖
+    generateMaze();  // 生成新的迷宮
+    playerX = 0;     // 重置角色位置
+    playerY = 0;
+  } else {
+    mode = 4; // 遊戲結束模式
+  }
+}
+void keyReleased() {
+  canMove = true;
+}
+void keyPressed() {
+  if(canMove){
+    canMove = false;
+  if (keyCode == UP) {
+    moveX = 0;
+    moveY = -1;
+    
+  } else if (keyCode == DOWN) {
+    moveX = 0;
+    moveY = 1;
+  } else if (keyCode == LEFT) {
+    moveX = -1;
+    moveY = 0;
+  } else if (keyCode == RIGHT) {
+    moveX = 1;
+    moveY = 0;
+  }
   
+  }
+}
+
+
+
+void generateMaze() {
+  // 初始化迷宮為牆壁
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      maze[i][j] = 1; // 設為牆
+      mazecheck[i][j] = 1;
+    }
+  }
   
-    void award(){
+  // 生成迷宮路徑
+  carvePath(0, 0);
+  
+  // 確保起點與終點是路徑
+  maze[0][0] = 0;
+  mazecheck[0][0] = 0;
+  maze[rows - 1][cols - 1] = 0;
+  mazecheck[rows - 1][cols - 1] = 0;
+  // 檢查並修復終點是否被牆包圍
+  ensureExitConnectivity();
+}
+
+// 檢查並修復終點是否可達
+void ensureExitConnectivity() {
+  int exitX = cols - 1;
+  int exitY = rows - 1;
+
+  // 終點周圍四個方向
+  int[] dx = {-1, 1, 0, 0};
+  int[] dy = {0, 0, -1, 1};
+
+  boolean hasPath = false;
+
+  // 檢查終點四周是否有通路
+  for (int i = 0; i < 4; i++) {
+    int nx = exitX + dx[i];
+    int ny = exitY + dy[i];
+    if (nx >= 0 && nx < cols && ny >= 0 && ny < rows && maze[ny][nx] == 0) {
+      hasPath = true;
+      break;
+    }
+  }
+
+  // 如果沒有通路，挖通一條路
+  if (!hasPath) {
+    // 隨機選擇一個方向挖通
+    for (int i = 0; i < 4; i++) {
+      int nx = exitX + dx[i];
+      int ny = exitY + dy[i];
+      if (nx >= 0 && nx < cols && ny >= 0 && ny < rows) {
+        maze[ny][nx] = 0; // 挖通路徑
+        break;
+      }
+    }
+  }
+}
+
+// 使用深度優先搜尋(DFS)來開闢迷宮
+void carvePath(int x, int y) {
+  maze[x][y] = 0; // 設定當前格子為通路
+  mazecheck[x][y] = 0;
+  
+  int[] directions = {0, 1, 2, 3}; // 上、下、左、右
+  int[] dx = {-1, 1, 0, 0};
+  int[] dy = {0, 0, -1, 1};
+  
+  // 隨機打亂四個方向
+ for (int i = 0; i < 4; i++) {
+  int j = (int)random(i + 1);  // 隨機選擇索引 i 到 i+1 之間的值
+  // 交換方向
+  int temp = directions[i];
+  directions[i] = directions[j];
+  directions[j] = temp;
+}
+
+  // 深度優先搜尋
+  for (int i = 0; i < 4; i++) {
+    int nx = x + dx[directions[i]];
+    int ny = y + dy[directions[i]];
+    
+    // 確保新位置在迷宮範圍內
+    if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && maze[nx][ny] == 1) {
+      if (countNeighbors(nx, ny) == 1) {
+        carvePath(nx, ny); // 進一步遞歸
+      }
+    }
+  }
+}
+
+// 計算相鄰格子的牆壁數量
+int countNeighbors(int x, int y) {
+  int count = 0;
+  int[] dx = {-1, 1, 0, 0};
+  int[] dy = {0, 0, -1, 1};
+  for (int i = 0; i < 4; i++) {
+    int nx = x + dx[i];
+    int ny = y + dy[i];
+    if (nx >= 0 && nx < rows && ny >= 0 && ny < cols && maze[nx][ny] == 0) {
+      count++;
+    }
+  }
+  return count;
+}
+
+// 繪製迷宮
+void drawMaze() {
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      if (maze[i][j] == 1) {
+       image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize); // 路徑
+      } else {
+        image(wall, j * cellSize, i * cellSize, cellSize, cellSize); // 牆壁
+      }
+    }
+  }
+  // 繪製起點與終點
+  fill(#00FF00);
+  rect(0, 0, cellSize, cellSize); // 起點
+  fill(#FF0000);
+  rect((cols - 1) * cellSize, (rows - 1) * cellSize, cellSize, cellSize); // 終點
+}
+
+//battle function
+ void award(){
     while(skill1==0) 
     {
     if((int)random(10)%3==0)
