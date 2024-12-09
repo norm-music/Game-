@@ -12,7 +12,7 @@ int rows, cols;
 int[][] mazecheck;
 int playerX = 0, playerY = 0; // 角色起始位置
 int moveX = 0, moveY = 0;     // 角色移動方向
-int moveDelay = 200;          // 移動延遲（毫秒）
+int moveDelay = 50;          // 移動延遲（毫秒）
 int lastMoveTime = 0;         // 上次移動的時間記錄
 int nowmap = 1; // 當前地圖
 int allmap = 3;  // 總地圖數量
@@ -22,6 +22,9 @@ PImage box;
 PImage bg;
 PImage grid;
 PImage mons1;
+PImage mons2;
+PImage mons3;
+PImage mons4;
 PImage pause1;
 PFont pixel;
 int enemyHp=10,enemyATK=3;
@@ -48,7 +51,8 @@ int awardtemp=0;
 int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
-boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false; // Pause state
+
+boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,play=false; // Pause state
 //battle define end
 
 void setup() {
@@ -70,6 +74,11 @@ void setup() {
   grid = loadImage("ScreenGrid.png");
   mons1 = loadImage("mons1.jpg");
   pause1 = loadImage("Pause.png");
+  mons2 = loadImage("mons2.jpg");
+  mons3 = loadImage("mons3.jpg");
+  mons4 = loadImage("mons4.jpg");
+  randomSeed(0);
+  
   imageMode(CORNER);
 }
   
@@ -87,221 +96,22 @@ void setup() {
     textSize(28);
   }else if (mode == 1) {
     // 迷宮模式
+    if (play == false){
+              playmaze();
+              play = true;
+    }
     drawMaze();
     drawPlayer(); // 繪製角色
     movePlayer(); // 處理角色移動
-    
-    if(battle){ //battle start
-  if (!stop&&Alive) {
-    image(bg, 0, 0, 1024, 768);
-    image(grid, 0, 0);
-    fill(#979AF5);
-    stroke(#1119EA);
-    rect(50, 350, 400, 100);
-    rect(600, 350, 400, 100);
-    rect(0, 0, 100, 70);
-    //image(mons1, 800, 150, 200, 200);
-    textSize(30);
-    fill(0, 408, 612);
-    text(enemyHp,720,390);//enemy show
-    text(enemyATK,720,430);
-    text(HP,170,390);//main show
-    text(finalatk,170,430);
-    text("生命值:", 70, 390);
-    text("攻擊力:", 70, 430);
-    text("生命值:", 620, 390);
-    text("攻擊力:", 620, 430);
+  }else if (mode == 2){
+    fill(#F00000);
     textSize(50);
-    fill(245, 27, 93);
-    text("ESC", 10, 50);
-    fill(155,125,135);
-    noStroke();
-    rect(0,480,1200,400);//atk skill bg
-    fill(255,255,0);//main
-    rect(50,150,200,200);
-    if(enemyHp<=0||HP<=0){
-    Alive = false;
-    }
-    if(!Turn&&millis()-atkdelay>1800)
-     {
-              
-       if((millis()-atkdelay)<2700){
-      text("-",300,300);
-      text(enemyATK,340,300);
-    }
-    if((millis()-atkdelay)>2700){
-    Turn = !Turn;
-    HP = HP - enemyATK;
-    }
-     }
-    if((millis()-atkdelay)<1500&&atking==1){
-      text("-",600,300);
-      text(finalatk,640,300);
-      
-    }
-    else
-  {
-  atking = 0;
-  }
-    if(battleset)
-    {
-    fill(#161FF2);//攻擊跟技能的方塊顏色
-    rect(75,550,400,150);//atk
-    rect(525,550,400,150);//skill
-    fill(#B8BBFA);
-    textSize(100);
-    text("攻擊",175,650);
-    text("技能",625,650);
-    }
-    else
-    {
-      rect(15,510,75,60);
-      fill(255,0,0);
-      textSize(30);
-      text("返回",25,550);
-      fill(80,90,100);
-      rect(15,680,75,60);
-      fill(0,255,0);
-      textSize(30);
-      text("確定",25,720);
-      fill(80,90,100);
-      rect(1-115+(1*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
-      rect(1-115+(1*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
-      rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
-      rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
-      fill(255,255,255);
-      for(int i=0;i<2;i+=2){
-      for(int j=0;j<2;j++){
-      if(skillarray[i+j]==1)
-    {
-      text("x"+skillmult[i+j]+"+"+skillplus[i+j],1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
-  
-    }
-    if(skillarray[i+j]==0)
-    {
-      text("+"+skillplus[i+j]+"x"+skillmult[i+j],1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
-    }
-      }
-      }
-      fill(80,90,100);
-    }
-  }
-  if(stop&&enemyHp>0) 
-  {
-   // if (at.isPlaying())
-  //        at.pause();
- //       else
-  //        at.loop();
-    image(pause1, 0, 0);
-    textSize(100);
-    fill(255, 255, 255);
-    text("暫停", 420, 300);
-    textSize(80);
-    text("Pause", 420, 400);
-    fill(#979AF5);
-    rect(0, 0, 100, 70);
-    rect(400, 0, 200, 70);
-    rect(810, 0, 100, 70);
-    fill(245, 27, 93);
-    textSize(40);
-    text("繼續", 10, 50);
-    text("重新開始", 420, 50);
-    text("放棄", 820, 50);
-    
-  }
-  if(enemyHp>0&&!stop) 
-  {
-  image(mons1, 800, 150, 200, 200);
-  }
-  else
-  {
-    
-  }  
-  if(battle&&!Alive)
-  {
-      if(enemyHp<=0)
-      {
-        
-        background(100,149,237);
-        image(grid,0,0);
-        text("勝利",512,150);
-        if(awardtemp==0)
-        {
-          award();
-          awardtemp=1;
-      }
-      if(skillchoose==0){
-      fill(0,0,0);
-      rect(350,250,330,120);
-      rect(350,400,330,120);
-      rect(350,550,330,120);
-      textAlign(CENTER, CENTER);
-      textSize(80);
-      fill(255,255,255);
-      if(skill1>=0)
-      text("+"+skill1,515,310);
-      if(skill1<0)
-      text(skill1,515,310);
-      if(skill2type==1){
-        text("x"+skill2,350+70,460);
-        if(skill22>=0)
-        text("+"+skill22,550,460);
-        else
-        text(skill22,550,460);
-      }
-       if(skill2type==0){
-        text("x"+skill2,550,460);
-        if(skill22>=0)
-        text("+"+skill22,420,460);
-        else
-        text(skill22,420,460);
-      }
-      if(skill3>=0)
-        text("+"+skill3+"",515,610);
-        else
-        text(skill3,510,610);
-    }
-    if(skillchoose>0)
-    {
-    background(100,149,237);
-        image(grid,0,0);
-      rect(15,510,75,60);
-      fill(255,0,0);
-      textSize(30);
-      text("返回",50,540);
-      fill(#161FF2);
-      rect(1-115+(1*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
-      rect(1-115+(1*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
-      rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
-      rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
-      fill(255,255,255);
-      for(int i=0;i<3;i+=2){
-      for(int j=0;j<2;j++){
-      if(skillarray[i+j]==1)
-    {
-      text("x("+skillmult[i+j]+")+("+skillplus[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
-  
-    }
-    if(skillarray[i+j]==0)
-    {
-      text("+("+skillplus[i+j]+")x("+skillmult[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
-    }
-      }
-      }
-    }
-      }
-      if(HP<=0)
-      {
-         background(0,0,0);
-         fill(255,0,0);
-         text("GAME OVER",250,150);
-      }
-  }
-}//battle end
-
-
-    
-  }else if (mode == 4) {
+    text("按向上鍵往上移動",300,200);
+    text("按向下鍵往下移動",300,300);
+    text("按向右鍵往右移動",300,400);
+    text("按向左鍵往左移動",300,500);
+   }
+  else if (mode == 4) {
     // 遊戲結束畫面
     background(#000000);
     fill(#FFFFFF);
@@ -309,7 +119,7 @@ void setup() {
     textAlign(CENTER, CENTER);
     text("遊戲結束！恭喜通關！", width / 2, height / 2);
   }
-}
+ }
     
   void mousePressed(){
         if (mouseX>=403 && mouseX <= 620 &&mouseY >= 330&&mouseY <= 430) 
@@ -318,186 +128,15 @@ void setup() {
         mode = 2;//打遊戲操作
        else if (mouseX>=403 && mouseX <= 620 &&mouseY >= 550&&mouseY <= 650) 
         mode = 3;//打遊戲介紹
-        if(battle){ //battle click start
-          if (mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
-    stop = !stop; 
-  }
-  if (stop==true){
-     if (mouseX > 420 && mouseX < 520 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT){
-       stop = !stop;
-       enemyHp=10;
-       enemyATK=3;
-       HP=10;
-       ATK=0;
-       //replay();
-     }
-  }
-  if(mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
-  {
-    atking=1;
-    atkdelay = millis();
-    println(atkdelay);
-    enemyHp = enemyHp - finalatk;
-    Turn = !Turn;
-  }
-  if(mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset)
-  {
-    battleset = !battleset;
-    
-  }
-   if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset)
-   {
-     battleset=!battleset;
-     finalatk = ATK;
-     skillready[0]=1;
-     skillready[1]=1;
-     skillready[2]=1;
-     skillready[3]=1;
-   }//返回
-   
-   if(mouseX > 15 && mouseX < 90 && mouseY > 680 && mouseY < 740 && mouseButton == LEFT&&!battleset)
-   {
-     battleset=!battleset;
-   }//確定
-   
- 
-  if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
-  {
-   skillchoose=0;
-  }
-  
-  if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
-   {
-     if(skillchoose==1)
-   {
-      skillarray[0]=0;
-      skillplus[0]=skill1;
-      skillmult[0]=1;
-   }
-   if(skillchoose==2)
-   {
-      skillarray[0]=skill2type;
-      skillplus[0]=skill22;
-      skillmult[0]=skill2;
-   }
-   if(skillchoose==3)
-   {
-      skillarray[0]=0;
-      skillplus[0]=skill3;
-      skillmult[0]=1;
-   }
-   battle = false;
-   }
-    if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
-   {
-     if(skillchoose==1)
-   {
-      skillarray[1]=0;
-      skillplus[1]=skill1;
-      skillmult[1]=1;
-   }
-   if(skillchoose==2)
-   {
-      skillarray[1]=skill2type;
-      skillplus[1]=skill22;
-      skillmult[1]=skill2;
-   }
-   if(skillchoose==3)
-   {
-      skillarray[1]=0;
-      skillplus[1]=skill3;
-      skillmult[1]=1;
-   }
-   skillchoosetemp = true;
-   }
-     if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
-   {
-     if(skillchoose==1)
-   {
-      skillarray[2]=0;
-      skillplus[2]=skill1;
-      skillmult[2]=1;
-   }
-   if(skillchoose==2)
-   {
-      skillarray[2]=skill2type;
-      skillplus[2]=skill22;
-      skillmult[2]=skill2;
-   }
-   if(skillchoose==3)
-   {
-      skillarray[2]=0;
-      skillplus[2]=skill3;
-      skillmult[2]=1;
-   }
-   skillchoosetemp = true;
-   }
-     if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
-   {
-     if(skillchoose==1)
-   {
-      skillarray[3]=0;
-      skillplus[3]=skill1;
-      skillmult[3]=1;
-   }
-   if(skillchoose==2)
-   {
-      skillarray[3]=skill2type;
-      skillplus[3]=skill22;
-      skillmult[3]=skill2;
-   }
-   if(skillchoose==3)
-   {
-      skillarray[3]=0;
-      skillplus[3]=skill3;
-      skillmult[3]=1;
-   }
-   skillchoosetemp = true;
-   }
-      if(mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
-  {
-    skillchoose=1;
-  }
-   if(mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&skillchoose==0)
- {
-   skillchoose=2;
- }
-    if(mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
-  {
-   skillchoose=3;
-  }
-  
-   if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
- {
-   skillready[0]=0;
-   skilluse(0);
-  println("1");
- }
- if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[1]==1&&Alive)
- {
-   skillready[1]=0;
-   skilluse(1);
-  println("1");
- }
- if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[2]==1&&Alive)
- {
-   skillready[2]=0;
-   skilluse(2);
-  println("1");
- }
- if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[3]==1&&Alive)
- {
-   skillready[3]=0;
-   skilluse(3);
-  println("1");
- }
-   
-   
-        }//battle click end
-      }
+        //battle click end.
+        else{
+            println("點擊未命中任何按鈕");
+            }
+        }
+
       
 void drawPlayer() {
-  fill(#0000FF); // 角色顏色
+  fill(#00EAFF); // 角色顏色
   noStroke();
   rect(playerX * cellSize, playerY * cellSize, cellSize, cellSize);
 }      
@@ -526,7 +165,9 @@ void movePlayer() {
 void nextLevel() {
   if (nowmap < allmap) {
     nowmap++;  // 切換到下一張地圖
-    generateMaze();  // 生成新的迷宮
+    generateMaze();
+    // 生成新的迷宮
+    drawMaze();
     playerX = 0;     // 重置角色位置
     playerY = 0;
   } else {
@@ -539,17 +180,17 @@ void keyReleased() {
 void keyPressed() {
   if(canMove){
     canMove = false;
-  if (keyCode == UP) {
+  if (keyCode == UP || key == 'w') {
     moveX = 0;
     moveY = -1;
     
-  } else if (keyCode == DOWN) {
+  } else if (keyCode == DOWN||key == 's') {
     moveX = 0;
     moveY = 1;
-  } else if (keyCode == LEFT) {
+  } else if (keyCode == LEFT||key == 'a') {
     moveX = -1;
     moveY = 0;
-  } else if (keyCode == RIGHT) {
+  } else if (keyCode == RIGHT||key == 'd') {
     moveX = 1;
     moveY = 0;
   }
@@ -626,7 +267,7 @@ void carvePath(int x, int y) {
   
   // 隨機打亂四個方向
  for (int i = 0; i < 4; i++) {
-  int j = (int)random(i + 1);  // 隨機選擇索引 i 到 i+1 之間的值
+  int j = i+(int)random(4 - i);  // 隨機選擇索引 i 到 i+1 之間的值
   // 交換方向
   int temp = directions[i];
   directions[i] = directions[j];
@@ -667,53 +308,46 @@ void drawMaze() {
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       if (maze[i][j] == 1) {
-       image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize); // 路徑
+       image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize);// 路徑
       } else {
-        image(wall, j * cellSize, i * cellSize, cellSize, cellSize); // 牆壁
+        image(wall,j* cellSize, i * cellSize, cellSize, cellSize);
+        
+        }
       }
-    }
+    
   }
   // 繪製起點與終點
+
   fill(#00FF00);
   rect(0, 0, cellSize, cellSize); // 起點
   fill(#FF0000);
   rect((cols - 1) * cellSize, (rows - 1) * cellSize, cellSize, cellSize); // 終點
+    randomSeed(1);
+    int r =int(random(rows));
+    int c = int(random(cols));
+    if (maze[r][c]==0){
+    image(mons1,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+     r =int(random(rows));
+     c = int(random(cols));
+    image(mons2,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+     r =int(random(rows));
+     c = int(random(cols));
+    image(mons3,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+     r =int(random(rows));
+     c = int(random(cols));
+    image(mons4,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+  }
+  
 }
-
-//battle function
- void award(){
-    while(skill1==0) 
-    {
-    if((int)random(10)%3==0)
-  skill1 = (int)random(-levelfix-20,-levelfix);
-  else
-  skill1 = (int)random(levelfix,levelfix+10);
-    }
-    while(skill2==0)
-    {
-  if(random(10)%2==0)
-  skill2 = (int)random(-levelfix/3-3,-levelfix/4-1);
-  else
-  skill2 = (int)random(levelfix/5+1,levelfix/4+3);
-    }
-  if((int)random(10)%2==0)
-  skill22 = (int)random(-levelfix-10,-levelfix);
-  else
-  skill22 = (int)random(levelfix,levelfix+7);
-  if(random(10)%2==0)
-  skill3 = (int)random(-levelfix*levelfix+20,-levelfix);
-  else
-  skill3 = (int)random(levelfix,levelfix*(levelfix-1)+10);
-  skill2type = (int)random(10)%2;
-  }
-  
-  void skilluse(int num)
-  {
-  if(skillarray[num]==0){
-  finalatk = (finalatk + skillplus[num])*skillmult[num];
-  }
-  
-  if(skillarray[num]==1){
-  finalatk = (finalatk * skillmult[num])+skillplus[num];
-  }
-  }
