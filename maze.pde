@@ -12,10 +12,48 @@ int rows, cols;
 int[][] mazecheck;
 int playerX = 0, playerY = 0; // 角色起始位置
 int moveX = 0, moveY = 0;     // 角色移動方向
-int moveDelay = 200;          // 移動延遲（毫秒）
+int moveDelay = 50;          // 移動延遲（毫秒）
 int lastMoveTime = 0;         // 上次移動的時間記錄
 int nowmap = 1; // 當前地圖
 int allmap = 3;  // 總地圖數量
+boolean canMove=true;
+//battle define start
+PImage box;
+PImage bg;
+PImage grid;
+PImage mons1;
+PImage mons2;
+PImage mons3;
+PImage mons4;
+PImage pause1;
+PFont pixel;
+int enemyHp=10,enemyATK=3;
+int HP=10;
+int ATK=0;
+int[] skillarray={0,-1,-1,-1};
+int[] skillplus={5,0,0,0};
+int[] skillmult={3,1,1,1};
+int[] skillready={1,1,1,1};
+int skill1;
+int skill2;
+int skill22;
+int skill3;
+int skill2type;
+int levelfix;
+int atkdelay;
+int atkdelay2;
+int atking;
+int skillline;
+int skillxtap=215;
+int skillytap=65;
+int skillrow =0;
+int awardtemp=0;
+int skillchoose =0;
+int finalatk = ATK;
+int skillnum;
+
+boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,play=false; // Pause state
+//battle define end
 
 void setup() {
   size(1024, 768);
@@ -32,6 +70,16 @@ void setup() {
   maze = new int[rows][cols];
   mazecheck = new int[rows][cols];
   generateMaze();
+  bg = loadImage("bg.jpg");
+  grid = loadImage("ScreenGrid.png");
+  mons1 = loadImage("mons1.jpg");
+  pause1 = loadImage("Pause.png");
+  mons2 = loadImage("mons2.jpg");
+  mons3 = loadImage("mons3.jpg");
+  mons4 = loadImage("mons4.jpg");
+  randomSeed(0);
+  
+  imageMode(CORNER);
 }
   
   void draw () {
@@ -48,10 +96,22 @@ void setup() {
     textSize(28);
   }else if (mode == 1) {
     // 迷宮模式
+    if (play == false){
+              playmaze();
+              play = true;
+    }
     drawMaze();
     drawPlayer(); // 繪製角色
     movePlayer(); // 處理角色移動
-  }else if (mode == 4) {
+  }else if (mode == 2){
+    fill(#F00000);
+    textSize(50);
+    text("按向上鍵往上移動",300,200);
+    text("按向下鍵往下移動",300,300);
+    text("按向右鍵往右移動",300,400);
+    text("按向左鍵往左移動",300,500);
+   }
+  else if (mode == 4) {
     // 遊戲結束畫面
     background(#000000);
     fill(#FFFFFF);
@@ -59,7 +119,7 @@ void setup() {
     textAlign(CENTER, CENTER);
     text("遊戲結束！恭喜通關！", width / 2, height / 2);
   }
-}
+ }
     
   void mousePressed(){
         if (mouseX>=403 && mouseX <= 620 &&mouseY >= 330&&mouseY <= 430) 
@@ -68,10 +128,15 @@ void setup() {
         mode = 2;//打遊戲操作
        else if (mouseX>=403 && mouseX <= 620 &&mouseY >= 550&&mouseY <= 650) 
         mode = 3;//打遊戲介紹
-      }
+        //battle click end.
+        else{
+            println("點擊未命中任何按鈕");
+            }
+        }
+
       
 void drawPlayer() {
-  fill(#0000FF); // 角色顏色
+  fill(#00EAFF); // 角色顏色
   noStroke();
   rect(playerX * cellSize, playerY * cellSize, cellSize, cellSize);
 }      
@@ -81,7 +146,8 @@ void movePlayer() {
   if (millis() - lastMoveTime >= moveDelay) {
     int newX = playerX + moveX;
     int newY = playerY + moveY;
-    
+    moveX=0;
+    moveY=0;
     // 確保角色不移出迷宮邊界，並檢查是否撞牆
     if (newX >= 0 && newX < cols && newY >= 0 && newY < rows && maze[newY][newX] == 0) {
       playerX = newX;
@@ -99,29 +165,40 @@ void movePlayer() {
 void nextLevel() {
   if (nowmap < allmap) {
     nowmap++;  // 切換到下一張地圖
-    generateMaze();  // 生成新的迷宮
+    generateMaze();
+    // 生成新的迷宮
+    drawMaze();
     playerX = 0;     // 重置角色位置
     playerY = 0;
   } else {
     mode = 4; // 遊戲結束模式
   }
 }
+void keyReleased() {
+  canMove = true;
+}
 void keyPressed() {
-  if (keyCode == UP) {
+  if(canMove){
+    canMove = false;
+  if (keyCode == UP || key == 'w') {
     moveX = 0;
     moveY = -1;
     
-  } else if (keyCode == DOWN) {
+  } else if (keyCode == DOWN||key == 's') {
     moveX = 0;
     moveY = 1;
-  } else if (keyCode == LEFT) {
+  } else if (keyCode == LEFT||key == 'a') {
     moveX = -1;
     moveY = 0;
-  } else if (keyCode == RIGHT) {
+  } else if (keyCode == RIGHT||key == 'd') {
     moveX = 1;
     moveY = 0;
   }
+  
+  }
 }
+
+
 
 void generateMaze() {
   // 初始化迷宮為牆壁
@@ -190,7 +267,7 @@ void carvePath(int x, int y) {
   
   // 隨機打亂四個方向
  for (int i = 0; i < 4; i++) {
-  int j = (int)random(i + 1);  // 隨機選擇索引 i 到 i+1 之間的值
+  int j = i+(int)random(4 - i);  // 隨機選擇索引 i 到 i+1 之間的值
   // 交換方向
   int temp = directions[i];
   directions[i] = directions[j];
@@ -231,15 +308,46 @@ void drawMaze() {
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
       if (maze[i][j] == 1) {
-       image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize); // 路徑
+       image(mazebg, j * cellSize, i * cellSize, cellSize, cellSize);// 路徑
       } else {
-        image(wall, j * cellSize, i * cellSize, cellSize, cellSize); // 牆壁
+        image(wall,j* cellSize, i * cellSize, cellSize, cellSize);
+        
+        }
       }
-    }
+    
   }
   // 繪製起點與終點
+
   fill(#00FF00);
   rect(0, 0, cellSize, cellSize); // 起點
   fill(#FF0000);
   rect((cols - 1) * cellSize, (rows - 1) * cellSize, cellSize, cellSize); // 終點
+    randomSeed(1);
+    int r =int(random(rows));
+    int c = int(random(cols));
+    if (maze[r][c]==0){
+    image(mons1,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+     r =int(random(rows));
+     c = int(random(cols));
+    image(mons2,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+     r =int(random(rows));
+     c = int(random(cols));
+    image(mons3,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+     r =int(random(rows));
+     c = int(random(cols));
+    image(mons4,r* cellSize,c * cellSize, cellSize, cellSize);
+    if (playerX == r* cellSize && playerY == c * cellSize){
+      battle_start();
+    }
+  }
+  
 }
