@@ -322,32 +322,35 @@ void drawMaze() {
   rect(0, 0, cellSize, cellSize); // 起點
   fill(#FF0000);
   rect((cols - 1) * cellSize, (rows - 1) * cellSize, cellSize, cellSize); // 終點
-    randomSeed(1);
+    randomSeed(1);//路徑上生成怪物
     int r =int(random(rows));
     int c = int(random(cols));
-    if (maze[r][c]==0){
-    image(mons1,r* cellSize,c * cellSize, cellSize, cellSize);
-    if (playerX == r* cellSize && playerY == c * cellSize){
+    if (maze[r][c]==0){//判斷玩家是否觸碰怪物
+    image(mons1,r*cellSize,c*cellSize, cellSize, cellSize);
+    if (playerX == r && playerY == c){
+      tint(255,255);
       battle_start();
     }
      r =int(random(rows));
      c = int(random(cols));
     image(mons2,r* cellSize,c * cellSize, cellSize, cellSize);
-    if (playerX == r* cellSize && playerY == c * cellSize){
+    if (playerX == r && playerY == c ){
+      tint(255,255);
       battle_start();
     }
      r =int(random(rows));
      c = int(random(cols));
     image(mons3,r* cellSize,c * cellSize, cellSize, cellSize);
-    if (playerX == r* cellSize && playerY == c * cellSize){
+    if (playerX == r && playerY == c){
+      tint(255,255);
       battle_start();
     }
      r =int(random(rows));
      c = int(random(cols));
     image(mons4,r* cellSize,c * cellSize, cellSize, cellSize);
-    if (playerX == r* cellSize && playerY == c * cellSize){
-      battle_start();
+    if (playerX == r && playerY == c){
+      tint(255,255);
+      battle_start(); 
     }
   }
-  
 }
