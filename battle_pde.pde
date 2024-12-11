@@ -1,11 +1,12 @@
   
 boolean battlemusic=false;
-void battle_start(){;
+void battle_start(){
     Mazestop();
     if (!battlemusic){
       playbattle();
       battlemusic=true;
     }
+    battle=true;
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
     fill(#979AF5);
@@ -13,7 +14,7 @@ void battle_start(){;
     rect(50, 350, 400, 100);
     rect(600, 350, 400, 100);
     rect(0, 0, 100, 70);
-    //image(mons1, 800, 150, 200, 200);
+    //image(mons3, 800, 150, 200, 200);
     textSize(30);
     fill(0, 408, 612);
     text(enemyHp,720,390);//enemy show
@@ -100,10 +101,6 @@ void battle_start(){;
     }
   if(stop&&enemyHp>0) 
   {
-    if (at.isPlaying())
-          at.pause();
-        else
-         at.loop();
     image(pause1, 0, 0);
     textSize(100);
     fill(255, 255, 255);
@@ -119,11 +116,10 @@ void battle_start(){;
     text("繼續", 10, 50);
     text("重新開始", 420, 50);
     text("放棄", 820, 50);
-    
   }
   if(enemyHp>0&&!stop) 
   {
-  image(mons1, 800, 150, 200, 200);
+  //image(mons1, 800, 150, 200, 200);
   }
   else
   {
@@ -133,7 +129,6 @@ void battle_start(){;
   {
       if(enemyHp<=0)
       {
-        
         background(100,149,237);
         image(grid,0,0);
         text("勝利",512,150);
@@ -209,14 +204,23 @@ void battle_start(){;
          fill(255,0,0);
          text("GAME OVER",250,150);
       }
-
-  
- if(battle){ //battle click start
-          if (mousePressed&&mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
-    stop = !stop; 
+}
+void mouseReleased(){
+  if ( mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
+        stop = ! stop;   
+      if (at.isPlaying()){
+              at.pause();
+            }
+             else{
+               at.loop();
+             }
      }
+}
+ void mousePressed(){
+ if(battle){ //battle click start
+   
   if (stop==true){
-     if (mousePressed && mouseX > 420 && mouseX < 520 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT){
+     if (mouseX > 420 && mouseX < 520 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT){
        stop = !stop;
        enemyHp=10;
        enemyATK=3;
@@ -225,7 +229,7 @@ void battle_start(){;
        replay();
      }
   }
-  if(mousePressed&&mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
+  if(mouseX > 75 && mouseX < 475 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&Turn)
   {
     atking=1;
     atkdelay = millis();
@@ -233,12 +237,11 @@ void battle_start(){;
     enemyHp = enemyHp - finalatk;
     Turn = !Turn;
   }
-  if(mousePressed&&mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset)
+  if(mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset)
   {
     battleset = !battleset;
-    
   }
-   if(mousePressed&&mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset)
+   if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset)
    {
      battleset=!battleset;
      finalatk = ATK;
@@ -254,12 +257,12 @@ void battle_start(){;
    }//確定
    
  
-  if(mousePressed&&mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+  if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
   {
    skillchoose=0;
   }
   
-  if(mousePressed&&mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+  if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
      if(skillchoose==1)
    {
@@ -325,7 +328,7 @@ void battle_start(){;
    }
    skillchoosetemp = true;
    }
-     if(mousePressed&&mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+     if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
      if(skillchoose==1)
    {
@@ -347,7 +350,7 @@ void battle_start(){;
    }
    skillchoosetemp = true;
    }
-      if(mousePressed&&mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
+      if(mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
   {
     skillchoose=1;
   }
@@ -359,32 +362,31 @@ void battle_start(){;
   {
    skillchoose=3;
   }
-  
-   if(mousePressed&&mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
+   if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
  {
    skillready[0]=0;
    skilluse(0);
   println("1");
  }
- if(mousePressed&&mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[1]==1&&Alive)
+ if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[1]==1&&Alive)
  {
    skillready[1]=0;
    skilluse(1);
   println("1");
  }
- if(mousePressed&&mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[2]==1&&Alive)
+ if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[2]==1&&Alive)
  {
    skillready[2]=0;
    skilluse(2);
   println("1");
  }
- if(mousePressed&&mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[3]==1&&Alive)
+ if(mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(2*skillytap) && mouseY < 500+(2*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[3]==1&&Alive)
  {
    skillready[3]=0;
    skilluse(3);
   println("1");
  }
-}
+  }
 }
  
  //battle function
@@ -413,8 +415,8 @@ void battle_start(){;
   skill3 = (int)random(levelfix,levelfix*(levelfix-1)+10);
   skill2type = (int)random(10)%2;
   }
-  
-  void skilluse(int num)
+
+  void skilluse(int num){
   {
   if(skillarray[num]==0){
   finalatk = (finalatk + skillplus[num])*skillmult[num];
@@ -422,5 +424,6 @@ void battle_start(){;
   
   if(skillarray[num]==1){
   finalatk = (finalatk * skillmult[num])+skillplus[num];
+  }
   }
   }
