@@ -1,5 +1,11 @@
   
+boolean battlemusic=false;
 void battle_start(){;
+    Mazestop();
+    if (!battlemusic){
+      playbattle();
+      battlemusic=true;
+    }
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
     fill(#979AF5);
@@ -418,9 +424,3 @@ void battle_start(){;
   finalatk = (finalatk * skillmult[num])+skillplus[num];
   }
   }
-   
-
-
-
-    
-  
