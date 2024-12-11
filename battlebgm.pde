@@ -9,17 +9,19 @@ void playbattle()
 {
   Ambitious = new Minim(this);
   at = Ambitious.loadFile("Alea.mp3");
-  at.play();
+  at.loop();
 }
 void playmaze()
 {
   file =new SoundFile(this,"ambitious.mp3");
   file.play();
 }
-void stop()
+void Mazestop()
 {
-  at.close();
-  Ambitious.stop();
+  file.pause();
+}
+void Battlestop(){
+ at.pause();  
 }
 void replay()
 {
@@ -27,4 +29,3 @@ void replay()
   at = Ambitious.loadFile("ambitious  (short).mp3");
   at.play();
 }
-  
