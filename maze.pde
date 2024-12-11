@@ -52,7 +52,7 @@ int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
 
-boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,play=false; // Pause state
+boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,plays=false; // Pause state
 //battle define end
 
 void setup() {
@@ -94,11 +94,21 @@ void setup() {
     stroke(#0000FF);
     strokeWeight(6);
     textSize(28);
+    if (mousePressed&&mouseX>=403 && mouseX <= 620 &&mouseY >= 330&&mouseY <= 430) 
+        mode = 1;
+        else if (mousePressed&&mouseX>=403 && mouseX <= 620 &&mouseY >= 440&&mouseY <= 540) 
+        mode = 2;//打遊戲操作
+       else if (mousePressed&&mouseX>=403 && mouseX <= 620 &&mouseY >= 550&&mouseY <= 650) 
+        mode = 3;//打遊戲介紹
+        //battle click end.
+        else{
+            println("點擊未命中任何按鈕");
+            }
   }else if (mode == 1) {
     // 迷宮模式
-    if (play == false){
+    if (plays == false){
               playmaze();
-              play = true;
+              plays = true;
     }
     drawMaze();
     drawPlayer(); // 繪製角色
@@ -118,21 +128,12 @@ void setup() {
     textSize(50);
     textAlign(CENTER, CENTER);
     text("遊戲結束！恭喜通關！", width / 2, height / 2);
+  }else if (mode == 5){
+    battle_start();
+    mousePressed();
   }
- }
-    
-  void mousePressed(){
-        if (mouseX>=403 && mouseX <= 620 &&mouseY >= 330&&mouseY <= 430) 
-        mode = 1;
-        else if (mouseX>=403 && mouseX <= 620 &&mouseY >= 440&&mouseY <= 540) 
-        mode = 2;//打遊戲操作
-       else if (mouseX>=403 && mouseX <= 620 &&mouseY >= 550&&mouseY <= 650) 
-        mode = 3;//打遊戲介紹
-        //battle click end.
-        else{
-            println("點擊未命中任何按鈕");
-            }
-        }
+       
+  }
 
       
 void drawPlayer() {
@@ -329,28 +330,31 @@ void drawMaze() {
     image(mons1,r*cellSize,c*cellSize, cellSize, cellSize);
     if (playerX == r && playerY == c){
       tint(255,255);
-      battle_start();
+      mode=5;
     }
      r =int(random(rows));
      c = int(random(cols));
     image(mons2,r* cellSize,c * cellSize, cellSize, cellSize);
     if (playerX == r && playerY == c ){
       tint(255,255);
-      battle_start();
+      mode=5;    
     }
      r =int(random(rows));
      c = int(random(cols));
     image(mons3,r* cellSize,c * cellSize, cellSize, cellSize);
     if (playerX == r && playerY == c){
       tint(255,255);
-      battle_start();
+      mode=5;
     }
      r =int(random(rows));
      c = int(random(cols));
     image(mons4,r* cellSize,c * cellSize, cellSize, cellSize);
     if (playerX == r && playerY == c){
       tint(255,255);
-      battle_start(); 
+      mode = 5;
     }
   }
+  println(playerX ,playerY);
+  println(r ,c);
+  
 }
