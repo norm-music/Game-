@@ -153,7 +153,7 @@ void setup() {
 
       
 void drawPlayer() {
-  fill(#00EAFF); // 角色顏色
+  fill(255,255,0); // 角色顏色
   noStroke();
   rect(playerX * cellSize, playerY * cellSize, cellSize, cellSize);
 }      
