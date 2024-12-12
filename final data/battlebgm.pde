@@ -4,18 +4,18 @@ Minim Ambitious;
 Minim Maze;
 AudioPlayer at;
 AudioPlayer in;
-
+void setup2(){
+  
+}
 void playbattle()
 {
-  Ambitious = new Minim(this);
-  at = Ambitious.loadFile("Alea.mp3");
-  at.play();
+ 
+  at.loop();
 }
 void playmaze()
 {
-  file =new Minim(this);
-  in = file.loadFile("ambitious.mp3");
-  in.play();
+  
+  in.loop();
 }
 void Mazestop()
 {
