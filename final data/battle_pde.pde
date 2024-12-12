@@ -53,7 +53,7 @@ void battle_start(){
     fill(155,125,135);
     noStroke();
     rect(0,480,1200,400);//atk skill bg
-    fill(255,255,0);//main
+    fill(#00EAFF);//main
     rect(50,150,200,200);
     if(enemyHp<=0||HP<=0){
     Alive = false;
