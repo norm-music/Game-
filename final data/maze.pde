@@ -64,7 +64,7 @@ void setup() {
   controlbotm = loadImage("controlbotm.png");
   wall = loadImage("wall.PNG");
   mazebg = loadImage("background.png");
-  TCfont = createFont("NotoSansTC-Black.otf", 28);
+  TCfont = createFont("FUSION-PIXEL-PROPORTIONAL.TTF", 28);
   textFont(TCfont);
   cols = width / cellSize;
   rows = height / cellSize;
