@@ -132,12 +132,10 @@ void battle_start(){
     fill(#979AF5);
     rect(0, 0, 100, 70);
     rect(400, 0, 200, 70);
-    rect(810, 0, 100, 70);
     fill(245, 27, 93);
     textSize(40);
     text("繼續", 10, 50);
     text("重新開始", 420, 50);
-    text("放棄", 820, 50);
   }
   if(enemyHp>0&&!stop) 
   {
