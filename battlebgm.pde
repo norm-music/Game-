@@ -1,9 +1,9 @@
 import ddf.minim.*;
-import processing.sound.*;
-SoundFile file;
+Minim file;
 Minim Ambitious;
 Minim Maze;
 AudioPlayer at;
+AudioPlayer in;
 
 void playbattle()
 {
@@ -13,12 +13,13 @@ void playbattle()
 }
 void playmaze()
 {
-  file =new SoundFile(this,"ambitious.mp3");
-  file.play();
+  file =new Minim(this);
+  in = file.loadFile("ambitious.mp3");
+  in.play();
 }
 void Mazestop()
 {
-  file.pause();
+  in.pause();
 }
 void Battlestop(){
  at.pause();  
