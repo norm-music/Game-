@@ -1,12 +1,34 @@
-  
-boolean battlemusic=false;
+ int choosedelay;
+ int enddelay;
+boolean battlemusic=false,endbool=false;
 void battle_start(){
+  if(!battle){
+    awardtemp =0;
+    enemyHp = (int) random(10,5*levelfix+10+monsterfix*3);
+    battle=true;
+    enemyATK = (int) random(3,2*levelfix+3+monsterfix*1);
+    Alive = true;
+    Turn = true;
+    println("you did it");
+    skillchoosetemp = false;
+    skillchoose =0;
+    battleset=true;
+    finalatk = ATK;
+    skillready[0]=1;
+     skillready[1]=1;
+     skillready[2]=1;
+     skillready[3]=1;
+     endbool=false;
+     enddelay = millis();
+}
     Mazestop();
     if (!battlemusic){
       playbattle();
       battlemusic=true;
+     
     }
-    battle=true;
+    if(Alive)
+    textAlign(TOP,LEFT);
     image(bg, 0, 0, 1024, 768);
     image(grid, 0, 0);
     fill(#979AF5);
@@ -43,7 +65,7 @@ void battle_start(){
       text("-",300,300);
       text(enemyATK,340,300);
     }
-    if((millis()-atkdelay)>2700){
+    if((millis()-atkdelay)>2700&&Alive){
     Turn = !Turn;
     HP = HP - enemyATK;
     }
@@ -84,16 +106,16 @@ void battle_start(){
       rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
       fill(255,255,255);
-      for(int i=0;i<2;i+=2){
+      for(int i=0;i<3;i+=2){
       for(int j=0;j<2;j++){
       if(skillarray[i+j]==1)
     {
-      text("x"+skillmult[i+j]+"+"+skillplus[i+j],1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
+      text("x("+skillmult[i+j]+")+("+skillplus[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
   
     }
     if(skillarray[i+j]==0)
     {
-      text("+"+skillplus[i+j]+"x"+skillmult[i+j],1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
+      text("+("+skillplus[i+j]+")x("+skillmult[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
     }
       }
       }
@@ -119,7 +141,7 @@ void battle_start(){
   }
   if(enemyHp>0&&!stop) 
   {
-  //image(mons1, 800, 150, 200, 200);
+  image(mons1, 800, 150, 200, 200);
   }
   else
   {
@@ -183,7 +205,7 @@ void battle_start(){
       rect(1-115+(3*skillxtap),500+(0*skillytap),200+skillxtap,50+skillytap);
       rect(1-115+(3*skillxtap),500+(2*skillytap),200+skillxtap,50+skillytap);
       fill(255,255,255);
-      for(int i=0;i<3;i+=2){
+      for(int i=0;i<4;i=i+2)
       for(int j=0;j<2;j++){
       if(skillarray[i+j]==1)
     {
@@ -195,18 +217,37 @@ void battle_start(){
       text("+("+skillplus[i+j]+")x("+skillmult[i+j]+")",1-115+(2*j+1)*skillxtap+150,500+(i*skillytap)+70);
     }
       }
-      }
+      
     }
-      }
       if(HP<=0)
       {
          background(0,0,0);
          fill(255,0,0);
          text("GAME OVER",250,150);
       }
+      
+  }
+       if(skillchoosetemp&&battle)
+      {
+        for(int i = 0;i<4;i++){
+        if(monsterpoint[i][0]==playerX&&monsterpoint[i][1]==playerY){
+       monsterpoint[i][0]=-1;
+       monsterpoint[i][1]=-1;
+       monsterfix++;
+        }
+      }
+     if(!endbool){
+       enddelay = millis();
+     endbool = true;
+   }
+   if(millis()-enddelay>600){
+        mode = 1;
+       battle = false; 
+    }
+      }
 }
 void mouseReleased(){
-  if ( mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT) {
+  if ( mouseX > 0 && mouseX < 100 && mouseY > 0 && mouseY < 70 && mouseButton == LEFT&&battle) {
         stop = ! stop;   
       if (at.isPlaying()){
               at.pause();
@@ -257,11 +298,11 @@ void mouseReleased(){
    }//確定
    
  
-  if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
+  if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0&&enddelay-millis()<-2000)
   {
    skillchoose=0;
   }
-  
+if(millis()-choosedelay>250){
   if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
      if(skillchoose==1)
@@ -282,7 +323,7 @@ void mouseReleased(){
       skillplus[0]=skill3;
       skillmult[0]=1;
    }
-   battle = false;
+  skillchoosetemp = true;
    }
     if(mousePressed&&mouseX >1-115+(3*skillxtap) && mouseX < 1-115+(3*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose>0)
    {
@@ -350,18 +391,24 @@ void mouseReleased(){
    }
    skillchoosetemp = true;
    }
+}
+     if(millis()-atkdelay>700){
       if(mouseX > 350 && mouseX < 680 && mouseY > 250 && mouseY < 370 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
   {
     skillchoose=1;
+    choosedelay = millis();
   }
    if(mousePressed&&mouseX > 350 && mouseX < 680 && mouseY > 400 && mouseY < 520 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&skillchoose==0)
  {
    skillchoose=2;
+   choosedelay = millis();
  }
     if(mousePressed&&mouseX > 350 && mouseX < 680 && mouseY > 550 && mouseY < 670 && mouseButton == LEFT&&enemyHp<=0&&!Alive&&battle&&skillchoose==0)
   {
    skillchoose=3;
+   choosedelay = millis();
   }
+     }
    if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
  {
    skillready[0]=0;
@@ -394,25 +441,25 @@ void mouseReleased(){
     while(skill1==0) 
     {
     if((int)random(10)%3==0)
-  skill1 = (int)random(-levelfix-20,-levelfix);
+  skill1 = (int)random(-5*levelfix-20,-levelfix-4*monsterfix);
   else
-  skill1 = (int)random(levelfix,levelfix+10);
+  skill1 = (int)random(3*levelfix,3*levelfix+10+3*monsterfix);
     }
     while(skill2==0)
     {
   if(random(10)%2==0)
-  skill2 = (int)random(-levelfix/3-3,-levelfix/4-1);
+  skill2 = (int)random(-levelfix/2-3-5*monsterfix,-levelfix/4-1-monsterfix);
   else
-  skill2 = (int)random(levelfix/5+1,levelfix/4+3);
+  skill2 = (int)random(levelfix/5+1+monsterfix,levelfix/4+3+2*monsterfix);
     }
   if((int)random(10)%2==0)
   skill22 = (int)random(-levelfix-10,-levelfix);
   else
   skill22 = (int)random(levelfix,levelfix+7);
   if(random(10)%2==0)
-  skill3 = (int)random(-levelfix*levelfix+20,-levelfix);
+  skill3 = (int)random(-7*levelfix*levelfix-20-monsterfix*3,-levelfix*levelfix-monsterfix);
   else
-  skill3 = (int)random(levelfix,levelfix*(levelfix-1)+10);
+  skill3 = (int)random(levelfix*7+monsterfix,7*levelfix*(levelfix-1)+10+3*monsterfix);
   skill2type = (int)random(10)%2;
   }
 
