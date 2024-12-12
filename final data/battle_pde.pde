@@ -1,6 +1,6 @@
  int choosedelay;
  int enddelay;
-boolean battlemusic=false,endbool=false;
+boolean endbool=false;
 void battle_start(){
   if(!battle){
     awardtemp =0;
@@ -25,7 +25,6 @@ void battle_start(){
     if (!battlemusic){
       playbattle();
       battlemusic=true;
-     
     }
     if(Alive)
     textAlign(TOP,LEFT);
@@ -35,7 +34,7 @@ void battle_start(){
     stroke(#1119EA);
     rect(50, 350, 400, 100);
     rect(600, 350, 400, 100);
-    rect(0, 0, 100, 70);
+    rect(0, 0, 140, 70);
     //image(mons3, 800, 150, 200, 200);
     textSize(30);
     fill(0, 408, 612);
@@ -49,7 +48,7 @@ void battle_start(){
     text("攻擊力:", 620, 430);
     textSize(50);
     fill(245, 27, 93);
-    text("ESC", 10, 50);
+    text("暫停", 10, 50);
     fill(155,125,135);
     noStroke();
     rect(0,480,1200,400);//atk skill bg
@@ -240,7 +239,10 @@ void battle_start(){
    }
    if(millis()-enddelay>600){
         mode = 1;
+        Battlestop();
+        playmaze();
        battle = false; 
+       battlemusic=false;
     }
       }
 }
