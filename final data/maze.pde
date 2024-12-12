@@ -53,11 +53,14 @@ int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
 int monsterfix=0;
-boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,plays=false,randmon=false; // Pause state
+boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,plays=false,randmon=false,battlemusic=false; // Pause state
 //battle define end
 
 void setup() {
-  size(1024, 768);
+  file =new Minim(this);
+  in = file.loadFile("ambitious.mp3");
+  Ambitious = new Minim(this);
+  at = Ambitious.loadFile("Alea.mp3");size(1024, 768);
   startbotm = loadImage("startbotm.png");
   backbotm = loadImage("backbotm.png");
   creditbotm = loadImage("creditbotm.png");
@@ -396,5 +399,4 @@ void drawmonster(){
   image(mons2,monsterpoint[1][0]*cellSize,monsterpoint[1][1]*cellSize, cellSize, cellSize);
   image(mons3,monsterpoint[2][0]*cellSize,monsterpoint[2][1]*cellSize, cellSize, cellSize);
   image(mons4,monsterpoint[3][0]*cellSize,monsterpoint[3][1]*cellSize, cellSize, cellSize);
-
 }
