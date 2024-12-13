@@ -133,6 +133,7 @@ void setup() {
   }else if (mode == 2){
     fill(#F00000);
     textSize(50);
+    textAlign(TOP,LEFT);
     text("按向上鍵往上移動",300,200);
     text("按向下鍵往下移動",300,300);
     text("按向右鍵往右移動",300,400);
@@ -142,6 +143,17 @@ void setup() {
     fill(#F00000);  
     text("返回",30,50);
     if (mousePressed&&mouseX>=0 && mouseX <= 150 &&mouseY >= 0&&mouseY <= 60&&mode==2){
+    mode =0;
+    }
+ }
+ else if (mode == 3){
+    fill(0,0,0);
+    rect(0,0,150,60);
+    fill(#F00000);  
+    textAlign(TOP,LEFT);
+      textSize(50);
+    text("返回",30,50);
+    if (mousePressed&&mouseX>=0 && mouseX <= 150 &&mouseY >= 0&&mouseY <= 60&&mode==3){
     mode =0;
     }
  }
