@@ -1,6 +1,7 @@
  int choosedelay;
  int enddelay;
-boolean battlemusic=false,endbool=false;
+ int skilldelay;
+boolean endbool=false;
 void battle_start(){
   if(!battle){
     awardtemp =0;
@@ -25,17 +26,15 @@ void battle_start(){
     if (!battlemusic){
       playbattle();
       battlemusic=true;
-     
     }
     if(Alive)
     textAlign(TOP,LEFT);
     image(bg, 0, 0, 1024, 768);
-    image(grid, 0, 0);
     fill(#979AF5);
     stroke(#1119EA);
     rect(50, 350, 400, 100);
     rect(600, 350, 400, 100);
-    rect(0, 0, 100, 70);
+    rect(0, 0, 140, 70);
     //image(mons3, 800, 150, 200, 200);
     textSize(30);
     fill(0, 408, 612);
@@ -49,18 +48,18 @@ void battle_start(){
     text("攻擊力:", 620, 430);
     textSize(50);
     fill(245, 27, 93);
-    text("ESC", 10, 50);
+    text("暫停", 10, 50);
     fill(155,125,135);
     noStroke();
     rect(0,480,1200,400);//atk skill bg
-    fill(255,255,0);//main
+    fill(#00EAFF);//main
     rect(50,150,200,200);
     if(enemyHp<=0||HP<=0){
     Alive = false;
     }
     if(!Turn&&millis()-atkdelay>1800)
      {
-              
+              fill(255,0,0);
        if((millis()-atkdelay)<2700){
       text("-",300,300);
       text(enemyATK,340,300);
@@ -71,6 +70,7 @@ void battle_start(){
     }
      }
     if((millis()-atkdelay)<1500&&atking==1){
+      fill(255,0,0);
       text("-",600,300);
       text(finalatk,640,300);
       
@@ -132,12 +132,10 @@ void battle_start(){
     fill(#979AF5);
     rect(0, 0, 100, 70);
     rect(400, 0, 200, 70);
-    rect(810, 0, 100, 70);
     fill(245, 27, 93);
     textSize(40);
     text("繼續", 10, 50);
     text("重新開始", 420, 50);
-    text("放棄", 820, 50);
   }
   if(enemyHp>0&&!stop) 
   {
@@ -152,7 +150,6 @@ void battle_start(){
       if(enemyHp<=0)
       {
         background(100,149,237);
-        image(grid,0,0);
         text("勝利",512,150);
         if(awardtemp==0)
         {
@@ -194,7 +191,6 @@ void battle_start(){
     if(skillchoose>0)
     {
     background(100,149,237);
-        image(grid,0,0);
       rect(15,510,75,60);
       fill(255,0,0);
       textSize(30);
@@ -242,7 +238,10 @@ void battle_start(){
    }
    if(millis()-enddelay>600){
         mode = 1;
+        Battlestop();
+        playmaze();
        battle = false; 
+       battlemusic=false;
     }
       }
 }
@@ -274,13 +273,13 @@ void mouseReleased(){
   {
     atking=1;
     atkdelay = millis();
-    println(atkdelay);
     enemyHp = enemyHp - finalatk;
     Turn = !Turn;
   }
   if(mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset)
   {
     battleset = !battleset;
+    skilldelay=millis();
   }
    if(mouseX > 15 && mouseX < 90 && mouseY > 510 && mouseY < 570 && mouseButton == LEFT&&!battleset)
    {
@@ -290,6 +289,7 @@ void mouseReleased(){
      skillready[1]=1;
      skillready[2]=1;
      skillready[3]=1;
+     skilldelay = millis();
    }//返回
    
    if(mouseX > 15 && mouseX < 90 && mouseY > 680 && mouseY < 740 && mouseButton == LEFT&&!battleset)
@@ -409,6 +409,7 @@ if(millis()-choosedelay>250){
    choosedelay = millis();
   }
      }
+     if(millis()-skilldelay>300&&mousePressed){
    if(mouseX >1-115+(1*skillxtap) && mouseX < 1-115+(1*skillxtap)+200+skillxtap && mouseY > 500+(0*skillytap) && mouseY < 500+(0*skillytap)+50+skillytap && mouseButton == LEFT&&!battleset&&skillready[0]==1&&Alive)
  {
    skillready[0]=0;
@@ -434,8 +435,8 @@ if(millis()-choosedelay>250){
   println("1");
  }
   }
+ }
 }
- 
  //battle function
  void award(){
     while(skill1==0) 
