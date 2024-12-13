@@ -5,6 +5,7 @@ PImage creditbotm;
 PImage controlbotm;
 PImage mazebg;
 PImage wall;
+PImage fp;
 int mode = 0;
 int[][] monsterpoint = new int[4][2];
 int[][] maze = new int[32][24]; // 迷宮陣列
@@ -74,6 +75,7 @@ void setup() {
   maze = new int[rows][cols];
   mazecheck = new int[rows][cols];
   generateMaze();
+  fp = loadImage("first.png");
   bg = loadImage("bg.jpg");
   grid = loadImage("ScreenGrid.png");
   mons1 = loadImage("mons1.jpg");
@@ -87,10 +89,13 @@ void setup() {
 }
   
   void draw () {
-  background(#FFFFFF);
+  background(fp);
   if (mode == 0) {
-    background(#FFFFFF);
-    fill(#0000FF);
+    background(fp);
+    fill(#42E9FA);
+    textAlign(CENTER, BOTTOM);
+    textSize(120); 
+    text("數學地下城", 512, 260);
     imageMode(CORNER);
     image(startbotm, 403, 330);
     image(controlbotm, 403, 440);
