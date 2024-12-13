@@ -276,8 +276,7 @@ void mouseReleased(){
     enemyHp = enemyHp - finalatk;
     Turn = !Turn;
   }
-  if(mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset)
-  {
+  if(mouseX > 525 && mouseX < 925 && mouseY > 550 && mouseY < 700 && mouseButton == LEFT&&battleset&&mousePressed)  {
     battleset = !battleset;
     skilldelay=millis();
   }
