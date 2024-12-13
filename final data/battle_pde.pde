@@ -29,7 +29,6 @@ void battle_start(){
     if(Alive)
     textAlign(TOP,LEFT);
     image(bg, 0, 0, 1024, 768);
-    image(grid, 0, 0);
     fill(#979AF5);
     stroke(#1119EA);
     rect(50, 350, 400, 100);
