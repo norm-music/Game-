@@ -5,6 +5,7 @@ PImage creditbotm;
 PImage controlbotm;
 PImage mazebg;
 PImage wall;
+PImage fp;
 int mode = 0;
 int[][] monsterpoint = new int[4][2];
 int[][] maze = new int[32][24]; // 迷宮陣列
@@ -53,11 +54,14 @@ int skillchoose =0;
 int finalatk = ATK;
 int skillnum;
 int monsterfix=0;
-boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,plays=false,randmon=false; // Pause state
+boolean stop = false,battleset=true,Turn=true,battle=false,Alive=true,skillchoosetemp=false,restart=false,back=false,draw=false,plays=false,randmon=false,battlemusic=false; // Pause state
 //battle define end
 
 void setup() {
-  size(1024, 768);
+  file =new Minim(this);
+  in = file.loadFile("ambitious.mp3");
+  Ambitious = new Minim(this);
+  at = Ambitious.loadFile("Alea.mp3");size(1024, 768);
   startbotm = loadImage("startbotm.png");
   backbotm = loadImage("backbotm.png");
   creditbotm = loadImage("creditbotm.png");
@@ -71,6 +75,7 @@ void setup() {
   maze = new int[rows][cols];
   mazecheck = new int[rows][cols];
   generateMaze();
+  fp = loadImage("first.png");
   bg = loadImage("bg.jpg");
   grid = loadImage("ScreenGrid.png");
   mons1 = loadImage("mons1.jpg");
@@ -84,10 +89,13 @@ void setup() {
 }
   
   void draw () {
-  background(#FFFFFF);
+  background(fp);
   if (mode == 0) {
-    background(#FFFFFF);
-    fill(#0000FF);
+    background(fp);
+    fill(#42E9FA);
+    textAlign(CENTER, BOTTOM);
+    textSize(120); 
+    text("數學地下城", 512, 260);
     imageMode(CORNER);
     image(startbotm, 403, 330);
     image(controlbotm, 403, 440);
@@ -134,16 +142,6 @@ void setup() {
     fill(#F00000);  
     text("返回",30,50);
     if (mousePressed&&mouseX>=0 && mouseX <= 150 &&mouseY >= 0&&mouseY <= 60&&mode==2){
-    mode =0;
-    }
- }
- else if( mode ==3){
- fill(0,0,0);
-    rect(0,0,150,60);
-    fill(#F00000);  
-    textSize(50);
-    text("返回",30,50);
-    if (mousePressed&&mouseX>=0 && mouseX <= 150 &&mouseY >= 0&&mouseY <= 60&&mode==3){
     mode =0;
     }
  }
@@ -406,5 +404,4 @@ void drawmonster(){
   image(mons2,monsterpoint[1][0]*cellSize,monsterpoint[1][1]*cellSize, cellSize, cellSize);
   image(mons3,monsterpoint[2][0]*cellSize,monsterpoint[2][1]*cellSize, cellSize, cellSize);
   image(mons4,monsterpoint[3][0]*cellSize,monsterpoint[3][1]*cellSize, cellSize, cellSize);
-
 }
